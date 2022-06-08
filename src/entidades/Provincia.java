@@ -1,4 +1,4 @@
-package entidades;
+ package entidades;
 
 public class Provincia extends Ubicacion{
 
@@ -21,7 +21,7 @@ public class Provincia extends Ubicacion{
 	
 	
 	////Constructores
-	public Provincia(int id, String nombre, Pais pais) {
+	public Provincia(String nombre, Pais pais) {
 		super(++idCount, nombre);
 		this.pais=pais;
 	}

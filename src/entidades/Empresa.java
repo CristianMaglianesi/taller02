@@ -6,7 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import excepciones.*;
+
 public class Empresa {
+	public Empresa() {
+		super();
+		inicializar();
+	}
+
 	private ArrayList<Responsable> responsables;
 	private ArrayList<Proveedor> proveedores;
 	private ArrayList<Bien> bienes;
@@ -15,9 +22,10 @@ public class Empresa {
 	////Metodos
 	// Se debe poder listar todas las facturas de un proveedor especificado.
 	ArrayList<Factura> listarFacturaByProveedor(Proveedor p){
-		ArrayList<Factura> ret= (ArrayList<Factura>) facturas.stream()
+
+		ArrayList<Factura> ret = new ArrayList<Factura> (facturas.stream()
 				.filter(f -> f.proveedor().equals(p))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 		return ret;
 
 	}
@@ -31,7 +39,7 @@ public class Empresa {
 	}	
 	
 	//Se debe poder listar todos los nombres de los proveedores por una determinada Localidad, ordenado de forma ascendente por nombre.
-	//Utilizar el stream filter, sorted, map y collect. Filter con el método esDeLocalidad(…), sorted ordenado ascendente por nombre, 
+	//Utilizar el stream filter, sorted, map y collect. Filter con el mï¿½todo esDeLocalidad(ï¿½), sorted ordenado ascendente por nombre, 
 	//map tomando el nombre de cada uno de los proveedores.
 	ArrayList<String> listarNombresProveedores(Localidad l){
 		ArrayList<String> ret= (ArrayList <String>)proveedores.stream()
@@ -53,7 +61,7 @@ public class Empresa {
 		return ret;
 	}
 	
-	//MetodosSe debe poder listar todos los bienes con un precio mayor a un valor pasado por parámetros.
+	//MetodosSe debe poder listar todos los bienes con un precio mayor a un valor pasado por parametros.
 	ArrayList<Bien> listarBienesByPrecioMayor(Double precioMayor){
 		ArrayList<Bien> ret = (ArrayList<Bien>) bienes.stream()
 				.filter(b -> b.precio() > precioMayor)
@@ -61,7 +69,7 @@ public class Empresa {
 		return ret;
 	}
 	
-	// Se debe poder listar todas las facturas con un monto total mayor a un valor pasado por parámetros.
+	// Se debe poder listar todas las facturas con un monto total mayor a un valor pasado por parametros.
 	ArrayList<Factura> listarFacturasByMontoMayor(Double montoMayor){
 		ArrayList<Factura> ret = (ArrayList<Factura>) facturas.stream()
 				.filter(f -> f.montoTotal() > montoMayor)
@@ -69,13 +77,15 @@ public class Empresa {
 		return ret;
 	}
 	
-	//Se debe poder listar cadenas de String que debe componer de la siguiente manera: “En la fecha <Fecha>, <NombreProveedor>
-	//facturó con un total de $<montoTotal> con <bienes.size()>”. Es decir, se debe poder listar todas las facturas realizadas 
-	//por un proveedor p, ordenado por fecha de forma Descendente(de nuevo a antiguo) en formato DIA/MES/AÑO, implementar la 
+	//Se debe poder listar cadenas de String que debe componer de la siguiente manera: ï¿½En la fecha <Fecha>, <NombreProveedor>
+	//facturï¿½ con un total de $<montoTotal> con <bienes.size()>ï¿½. Es decir, se debe poder listar todas las facturas realizadas 
+	//por un proveedor p, ordenado por fecha de forma Descendente(de nuevo a antiguo) en formato DIA/MES/Aï¿½O, implementar la 
 	//clase Comparable y ordenarlas con Collection.sort.
 	ArrayList<String> listarFacturadasPorProveedor(Proveedor p){
+		ArrayList<String> ret = new ArrayList<String>();
 		ArrayList<Factura> facturasDelProveedor = listarFacturaByProveedor(p);//Facturas de un proveedor
 		Collections.sort(facturasDelProveedor); //Las ordeno por fecha 
+		System.out.println(facturasDelProveedor.size());
 		ArrayList <Date> fechas = (ArrayList<Date>) facturasDelProveedor.stream() //Hago una lista de las fechas 
 				.map(Factura::fecha)
 				.distinct()
@@ -91,14 +101,34 @@ public class Empresa {
 					.map(Factura::montoTotal)
 					.reduce(0.0, Double::sum);
 			
-			System.out.println("En la fecha "+fecha+", "+p.nombre()+" facturo con un total de $"+monto+" con "+cont+" bienes.");
+			ret.add("En la fecha "+fecha.getDate()+", "+p.nombre()+" facturo con un total de $"+monto+" con "+cont+" bienes.");
 					
 		}
-
-		
-													 
-		
-		return null;
+										
+		return ret;
 	}
-
+	
+	////Auxiliares para testeo
+	private void inicializar() {
+		Supplier supplier = Supplier.getSupplier();
+		responsables = supplier.getResponsables();
+		proveedores = supplier.getProveedores();
+		facturas = supplier.getFacturas();
+		bienes = supplier.listarBienes(proveedores);
+	}
+	
+	public void crearFactura (ArrayList<Bien> bienes, Proveedor proveedor, Responsable responsable,
+			Date fecha) throws proveedorDeDistintoPaisException, limiteDeBienesSuperados {
+		if (proveedor.localidad().provincia().pais() != responsable.localidad().provincia().pais()) {
+			throw new proveedorDeDistintoPaisException();
+		}
+		else if (bienes.size()>20){
+			throw new limiteDeBienesSuperados(Factura.max());
+		}
+		else {
+			facturas.add(new Factura(bienes, proveedor, responsable, fecha));
+		}
+		
+		
+	}
 }

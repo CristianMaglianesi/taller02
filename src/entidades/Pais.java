@@ -13,9 +13,13 @@ public class Pais extends Ubicacion{
 	////Metodos
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Pais otro = (Pais) o;
-        return (this.getId() == otro.getId());
+    	if (this == o) 
+    	{return true;
+    	}
+    	if (o == null || getClass() != o.getClass()) {
+    		return false;
+    	}
+    	Pais otro = (Pais) o;
+    	return (this.getId() == otro.getId());
     }
 }

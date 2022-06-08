@@ -36,7 +36,7 @@ public abstract class Persona implements criterioBusqueda<Localidad>{
 	////Metodos
 	@Override
 	public Boolean esDeLocalidad(Localidad unaLocalidad) {
-		return this.esDeLocalidad(unaLocalidad);
+		return this.localidad.equals(unaLocalidad);
 	}
 
 }

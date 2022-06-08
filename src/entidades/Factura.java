@@ -19,6 +19,10 @@ public class Factura implements Comparable<Factura>{
 	public static int idCount() {
 		return idCount;
 	}
+	
+	public static int max() {
+		return MAX_BIENES;
+	}
 	public int id() {
 		return id;
 	}
@@ -54,7 +58,7 @@ public class Factura implements Comparable<Factura>{
 		this.fecha = fecha;
 	}
 	////Constructores
-	public Factura(int id, double montoTotal, ArrayList<Bien> bienes, Responsable responsable, Proveedor proveedor,
+	public Factura(ArrayList<Bien> bienes, Proveedor proveedor, Responsable responsable,
 			Date fecha) {
 		this.id = ++idCount;
 		this.bienes = bienes;
@@ -80,12 +84,26 @@ public class Factura implements Comparable<Factura>{
 		return ret;
 	}
 	
+	private double descuentoPorCant() {
+		double ret;
+		if (bienes.size() > 10) {
+			ret  = 0.2;
+		}
+		else if (bienes.size()> 5) {
+			ret =  0.1;
+		}
+		else {
+			ret =  0;
+		}
+		return ret;
+	}
+	
 	private double calcularMonto() {
 		double montoTotal = 0;
 		for (Bien unBien : bienes) {
 			montoTotal += unBien.precio();
 		}
-		return montoTotal* this.factorPorUbicacion();
+		return montoTotal* this.factorPorUbicacion()*(1-descuentoPorCant());
 	}
 	@Override
 	public int compareTo(Factura o) {

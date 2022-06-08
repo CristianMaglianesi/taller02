@@ -44,9 +44,10 @@ public class Bien {
 	
 	//Constructores
 
-	public Bien(String alias) {
+	public Bien(String alias, double precio) {
 		this.id = ++idCount;
 		this.alias = alias;
+		this.precio = precio;
 	}
 
 }

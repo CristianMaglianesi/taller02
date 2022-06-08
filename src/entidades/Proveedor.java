@@ -26,6 +26,11 @@ public class Proveedor extends Persona{
 		bienes = new ArrayList<Bien>();
 	}
 	
+	public Proveedor (String nombre, Localidad localidad, ArrayList<Bien> bienes) {
+		super (++idCount, nombre, localidad);
+		this.bienes = bienes;
+	}
+	
 	////Metodos
 
 }
